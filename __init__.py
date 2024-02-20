@@ -23,7 +23,7 @@ def resume_template():
 # Création d'une nouvelle route pour la lecture de la BDD
 @app.route('/lecture/')
 def ReadBDD():
-    conn = get_db_connection()
+    conn = get_db_connection() 
     posts = conn.execute('SELECT * FROM livres').fetchall()
     conn.close()
 
