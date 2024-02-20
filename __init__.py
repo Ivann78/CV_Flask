@@ -1,4 +1,3 @@
-from flask import Flask,render_template
 from flask import Flask, render_template, jsonify
 import json
 import sqlite3
