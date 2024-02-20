@@ -25,7 +25,7 @@ def resume_template():
 def ReadBDD():
     conn = sqlite3.connect('/home/ivann/www/flask/database.db')
     cursor = conn.cursor()
-    cursor.execute('SELECT * FROM clients;')
+    cursor.execute('SELECT * FROM livres;')
     data = cursor.fetchall()
     conn.close()
     
