@@ -1,8 +1,16 @@
 from flask import Flask, render_template, request, redirect, jsonify, json
 from urllib.request import urlopen
 import sqlite3
+from flask_mysqldb import MySQL
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import DataRequired, Email, EqualTo
 
 app = Flask(__name__) #creating flask app name
+
+@app.errorhandler(404) 
+def not_found(e): 
+  return render_template("404.html") 
 
 @app.route('/')
 def home():
