@@ -1,76 +1,80 @@
-from flask import Flask, render_template, request, redirect, jsonify, json, render_template_string, url_for, session
+from flask import Flask, render_template_string, render_template, jsonify, request, redirect, url_for, session
+from flask import render_template
+from flask import json
 from urllib.request import urlopen
 import sqlite3
-# from flask_wtf import FlaskForm
-# from wtforms import StringField, PasswordField, SubmitField
-# from wtforms.validators import DataRequired, Email, EqualTo
 
-app = Flask(__name__) #creating flask app name
+app = Flask(__name__)                                                                                                                  
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'  # Clé secrète pour les sessions
 
-@app.errorhandler(404) 
-def not_found(e): 
-  return render_template("404.html") 
+# Fonction pour créer une clé "authentifie" dans la session utilisateur
+def est_authentifie():
+    return session.get('authentifie')
 
 @app.route('/')
-def home():
-    return render_template("index.html")
-
-@app.route('/resume_1')
-def resume_1():
-    return render_template("resume_1.html")
-
-@app.route('/resume_2')
-def resume_2():
-    return render_template("resume_2.html")
-
-@app.route('/resume_template')
-def resume_template():
-    return render_template("resume_template.html")
-
+def hello_world():
+    return render_template('hello.html')
 
 @app.route('/lecture')
 def lecture():
-    return render_template("lecture.html")
+    if not est_authentifie():
+        # Rediriger vers la page d'authentification si l'utilisateur n'est pas authentifié
+        return redirect(url_for('authentification'))
 
-@app.route('/authentification')
+  # Si l'utilisateur est authentifié
+    return "<h2>Bravo, vous êtes authentifié</h2>"
+
+@app.route('/authentification', methods=['GET', 'POST'])
 def authentification():
-    return render_template("authentification.html")
+    if request.method == 'POST':
+        # Vérifier les identifiants
+        if request.form['username'] == 'admin' and request.form['password'] == 'password': # password à cacher par la suite
+            session['authentifie'] = True
+            # Rediriger vers la route lecture après une authentification réussie
+            return redirect(url_for('lecture'))
+        else:
+            # Afficher un message d'erreur si les identifiants sont incorrects
+            return render_template('formulaire_authentification.html', error=True)
 
-@app.route('/fiche_client/<int:client_id>')
-def fiche_client():
-    return render_template("fiche_client.html")
+    return render_template('formulaire_authentification.html', error=False)
 
-# Création d'une nouvelle route pour la lecture de la BDD
-@app.route("/consultation")
-def ReadBDD():
-    conn = sqlite3.connect('/home/ivann/www/flask/database.db')
+@app.route('/fiche_client/<int:post_id>')
+def Readfiche(post_id):
+    conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
-    cursor.execute('SELECT * FROM livres;')
+    cursor.execute('SELECT * FROM clients WHERE id = ?', (post_id,))
     data = cursor.fetchall()
     conn.close()
-    
     # Rendre le template HTML et transmettre les données
     return render_template('read_data.html', data=data)
 
-@app.route('/enregistrer_client')
-def enregistrer_client():
-    return render_template("enregistrer_client.html")
-
-@app.route('/post/<int:post_id>')
-def get_post(post_id):
-    conn = sqlite3.connect('/home/ivann/www/flask/database.db')
-    post = conn.execute('SELECT * FROM livres WHERE id = ?', (post_id,)).fetchone()
+@app.route('/consultation/')
+def ReadBDD():
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM clients;')
+    data = cursor.fetchall()
     conn.close()
+    return render_template('read_data.html', data=data)
 
-    # Si la publication avec l'ID spécifié n'est pas trouvée, renvoie une réponse 404 Not Found
-    if post is None:
-        return jsonify(error='Post not found'), 404
+@app.route('/enregistrer_client', methods=['GET'])
+def formulaire_client():
+    return render_template('formulaire.html')  # afficher le formulaire
 
-    # Convertit la publication en un format JSON
-    json_post = {'id': post['id'], 'title': post['title'], 'auteur': post['auteur']}
-    
-    # Renvoie la réponse JSON
-    return jsonify(post=json_post)
+@app.route('/enregistrer_client', methods=['POST'])
+def enregistrer_client():
+    nom = request.form['nom']
+    prenom = request.form['prenom']
 
-if(__name__ == "__main__"):
-    app.run()
+    # Connexion à la base de données
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+
+    # Exécution de la requête SQL pour insérer un nouveau client
+    cursor.execute('INSERT INTO clients (created, nom, prenom, adresse) VALUES (?, ?, ?, ?)', (1002938, nom, prenom, "ICI"))
+    conn.commit()
+    conn.close()
+    return redirect('/consultation/')  # Rediriger vers la page d'accueil après l'enregistrement
+                                                                                                                                       
+if __name__ == "__main__":
+  app.run(debug=True)
