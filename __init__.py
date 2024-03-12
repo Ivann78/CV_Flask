@@ -1,7 +1,6 @@
-from flask import Flask, render_template, request, redirect, jsonify, json
+from flask import Flask, render_template, request, redirect, jsonify, json, render_template_string, url_for, session
 from urllib.request import urlopen
 import sqlite3
-from flask_mysqldb import MySQL
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Email, EqualTo
