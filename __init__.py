@@ -28,8 +28,21 @@ def resume_2():
 def resume_template():
     return render_template("resume_template.html")
 
+
+@app.route('/lecture')
+def lecture():
+    return render_template("lecture.html")
+
+@app.route('/authentification')
+def authentification():
+    return render_template("authentification.html")
+
+@app.route('/fiche_client/<int:client_id>')
+def fiche_client():
+    return render_template("fiche_client.html")
+
 # Création d'une nouvelle route pour la lecture de la BDD
-@app.route("/consultation/")
+@app.route("/consultation")
 def ReadBDD():
     conn = sqlite3.connect('/home/ivann/www/flask/database.db')
     cursor = conn.cursor()
@@ -39,6 +52,10 @@ def ReadBDD():
     
     # Rendre le template HTML et transmettre les données
     return render_template('read_data.html', data=data)
+
+@app.route('/enregistrer_client')
+def enregistrer_client():
+    return render_template("enregistrer_client.html")
 
 @app.route('/post/<int:post_id>')
 def get_post(post_id):
