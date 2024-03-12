@@ -12,7 +12,7 @@ cur.execute("INSERT INTO livres (title, auteur) VALUES (?, ?)",('Notre-Dame de P
 cur.execute("INSERT INTO livres (title, auteur) VALUES (?, ?)",('CosmoZ', 'Christophe Claro'))
 cur.execute("INSERT INTO livres (title, auteur) VALUES (?, ?)",('La reine du crime', 'Agatha Christie'))        
             
-cur.execute("INSERT INTO users (user) VALUES (?)",('ivann'))
+cur.execute("INSERT INTO users (user) VALUES (?)",('ivann',))
 
 cur.execute("INSERT INTO clients (nom, prenom, adresse) VALUES (?, ?, ?)",('DUPONT', 'Emilie', '123, Rue des Lilas, 75001 Paris'))
 cur.execute("INSERT INTO clients (nom, prenom, adresse) VALUES (?, ?, ?)",('LEROUX', 'Lucas', '456, Avenue du Soleil, 31000 Toulouse'))
