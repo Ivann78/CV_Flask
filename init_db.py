@@ -7,13 +7,6 @@ with open('schema.sql') as f:
 
 cur = connection.cursor()
 
-cur.execute("INSERT INTO livres (title, auteur) VALUES (?, ?)",('Moby-Dick', 'Herman Melville'))
-cur.execute("INSERT INTO livres (title, auteur) VALUES (?, ?)",('Notre-Dame de Paris', 'Victor Hugo'))
-cur.execute("INSERT INTO livres (title, auteur) VALUES (?, ?)",('CosmoZ', 'Christophe Claro'))
-cur.execute("INSERT INTO livres (title, auteur) VALUES (?, ?)",('La reine du crime', 'Agatha Christie'))        
-            
-cur.execute("INSERT INTO users (user) VALUES (?)",('ivann',))
-
 cur.execute("INSERT INTO clients (nom, prenom, adresse) VALUES (?, ?, ?)",('DUPONT', 'Emilie', '123, Rue des Lilas, 75001 Paris'))
 cur.execute("INSERT INTO clients (nom, prenom, adresse) VALUES (?, ?, ?)",('LEROUX', 'Lucas', '456, Avenue du Soleil, 31000 Toulouse'))
 cur.execute("INSERT INTO clients (nom, prenom, adresse) VALUES (?, ?, ?)",('MARTIN', 'Amandine', '789, Rue des Érables, 69002 Lyon'))
